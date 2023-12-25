@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<head>
+    <title>카카오톡</title>
+    <link href="{{ url_for('static', path='/style.css') }}" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="/static/function.js"></script>
+</head>
+
+<body>
+    <div class="outer_container">
+        <div class="chatroom">
+            <nav class="topbar">
+                <a href="/chatlist"><img src="../static/img/backward.png" width="14px" height="14px;"></a><div id="op_title" style="margin-left:20px;"></div>
+            </nav>
+            <ul id="ul_msg" class="frame">
+            </ul>
+            <div class="input_container">
+                <textarea name="input_msg" id="msg_input" class="input"></textarea>
+                <button id="btn_send" type="submit">Send</button>
+            </div>
+        </div>
+    </div>
+    
+    <div style="display: none; pointer-events: none;">
+        <div id="chatroom_id"></div>
+        <div id="username">{{ username }}</div>
+        <div id="op"></div>
+    </div>
+</body>
+
+</html>

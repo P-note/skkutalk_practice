@@ -1,0 +1,81 @@
+<html>
+
+<head>
+    <link href="{{ url_for('static', path='/pagestyle.css') }}" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        function update_chatlist(response) {
+            // console.log(response);
+            $('#chatlist').empty();
+            let chatlist = $('#chatlist');
+            let session_user = "{{ username }}";
+            response.forEach(item => {
+                sender = item.sender;
+                receiver = item.receiver;
+                latest = item.latest !== null ? item.latest : "";
+                if(session_user == sender){
+                    if(item.latest == null)
+                        chatlist.append("<li class='chatunit'><div class='fid'>" + receiver + "</div><div class='latest'></div></li>");
+                    else
+                        chatlist.append("<li class='chatunit'><div class='fid'>" + receiver + "</div><div class='latest'>"+ latest +"</div></li>");
+                }
+                else{
+                    if(item.latest == null)
+                        chatlist.append("<li class='chatunit'><div class='fid'>" + sender + "</div><div class='latest'></div></li>");
+                    else
+                        chatlist.append("<li class='chatunit'><div class='fid'>" + sender + "</div><div class='latest'>"+ latest +"</div></li>");
+                }
+            });
+        };
+        function get_chatlists(){
+            $.getJSON("/get_chatlist", update_chatlist);
+        }
+        $(document).ready(function(event){
+            get_chatlists();
+            $(document).on('click', '.chatunit', function (event) {
+                friend_id = event.target.querySelector('.fid').innerText;
+                data = {"id":friend_id};
+                $.ajax({
+                    url: "/into_chatroom",
+                    type: "post",
+                    contentType: "application/json",
+                    data: JSON.stringify(data),
+                    success: function(result){
+                        let cid = result.id;
+                        let op = result.receiver;
+                        let session_user = "{{ username }}";
+                        if(session_user != result.sender)
+                            op = result.sender;
+                        sessionStorage.setItem('cid', cid);
+                        sessionStorage.setItem('op', op);
+                        console.log(sessionStorage.getItem('cid'),sessionStorage.getItem('op'));
+                        window.location.replace('/chatroom');
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <div class="chatlist_container">
+        <nav class="sidebar">
+            <a href="/friendlist" id="btn_friendlist"><img src="../static/img/person.png" width="28px" height="28px;"></a>
+            <a href="/chatlist" id="btn_chatlist"><img src="../static/img/speech-bubble.png" width="28px" height="28px;"></a>
+        </nav>
+        <section class="internal_container">
+            <header class="topbar">
+                <h3>채팅</h3>
+            </header>
+            <section style="overflow:auto">
+                <ul id="chatlist">
+                </ul>
+            </section>
+        </section>
+    </div>
+</body>
+
+</html>

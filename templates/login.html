@@ -1,0 +1,61 @@
+<html>
+
+<head>
+    <link href="{{ url_for('static', path='/pagestyle.css') }}" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
+    <script>
+        $(document).ready(function () {
+            $("#btn_login").click(function (event) {
+                var username = $("#username").val()
+                var password = $("#password").val()
+
+                var data = { "username": username, "password": password };
+                $.ajax({
+                    url: "/token",
+                    type: "post",
+                    data: data,
+                    success: function (data, txtStatus, xhr) {
+                        window.location = "/friendlist";
+                    },
+                    error: function (e) {
+                        $("#result").html("login failed");
+                    }
+                });
+            });
+
+            $("#btn_register").click(function (event) {
+                var username = $("#username").val()
+                var password = $("#password").val()
+
+                var data = { "username": username, "password": password };
+                $.ajax({
+                    url: "/register",
+                    type: "post",
+                    data: data,
+                    success: function (data, txtStatus, xhr) {
+                        window.location = "/friendlist";
+                    },
+                    error: function (e) {
+                        $("#result").html("login failed");
+                    }
+                });
+            })
+        });
+    </script>
+</head>
+
+<body>
+    <section class="login_container">
+        <h1>SKKU TALK</h1>
+        <input type="text" id="username" placeholder="username">
+        <input type="password" id="password" placeholder="password">
+        <button style="background-color: black; color:white" id="btn_login">Login</button>
+        <button style="width:20%;" id="btn_register">sign up</button>
+    </section>
+
+</body>
+
+</html>

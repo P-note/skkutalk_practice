@@ -1,0 +1,46 @@
+<html>
+
+<head>
+    <link href="{{ url_for('static', path='/pagestyle.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="../static/pagestyle.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('input').on('keyup', function (e) {
+                if (e.keyCode == 13) {
+                    e.preventDefault();
+                    friend_id = $("#friend_id").val();
+                    var data = { "id": friend_id };
+                    $.ajax({
+                        url: "/addfriend",
+                        type: "post",
+                        contentType: "application/json",
+                        data: JSON.stringify(data),
+                        success: function(result){
+                            window.location.replace('/friendlist')
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <div class="login_container" style="background-color:white;">
+        <header class="topbar">
+            <h3>카카오톡 ID로 추가</h1>
+        </header>
+        <section>
+            <label>Name</label>
+            <input type="text" placeholder="친구 카카오톡 ID" id="friend_id"
+                style="border: 0; outline: 0; border-bottom: 1px solid black;">
+        </section>
+    </div>
+
+</body>
+
+</html>

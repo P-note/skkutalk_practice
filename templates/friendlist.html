@@ -1,0 +1,64 @@
+<html>
+
+<head>
+    <link href="{{ url_for('static', path='/pagestyle.css') }}" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            let session_user = "{{username}}"
+            $("#btn_addfriend").click(function (event) {
+                window.location = "/addfriend";
+            });
+            friendlist_data = "{{friendlist_data}}";
+            $(document).on('click', '.friend', function (event) {
+                friend_id = event.target.innerText;
+                data = {"id":friend_id};
+                $.ajax({
+                    url: "/into_chatroom",
+                    type: "post",
+                    contentType: "application/json",
+                    data: JSON.stringify(data),
+                    success: function(result){
+                        let cid = result.id;
+                        let op = result.receiver;
+                        if(session_user != result.sender)
+                            op = result.sender;
+                        sessionStorage.setItem('cid', cid);
+                        sessionStorage.setItem('op', op);
+                        console.log(sessionStorage.getItem('cid'),sessionStorage.getItem('op'));
+                        window.location.replace('/chatroom');
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <div class="friendlist_container">
+        <nav class="sidebar">
+            <a href="/friendlist" id="btn_friendlist"><img src="../static/img/person.png" width="28px"
+                    height="28px;"></a>
+            <a href="/chatlist" id="btn_chatlist"><img src="../static/img/speech-bubble.png" width="28px"
+                    height="28px;"></a>
+        </nav>
+        <section class="internal_container">
+            <header class="topbar">
+                <h3>친구</h3><button id="btn_addfriend"><img src="../static/img/add-friend.png" width="24px"
+                        height="24px;"></button>
+            </header>
+            <section style="overflow:auto">
+                <ul id="friendlist">
+                    {% for friend in friendlist_data %}
+                        <li class="friend">{{ friend }}</li>
+                    {% endfor %}
+                </ul>
+            </section>
+        </section>
+    </div>
+</body>
+
+</html>
